@@ -36,3 +36,4 @@ build/
 
 #custom
 /target
+.env
