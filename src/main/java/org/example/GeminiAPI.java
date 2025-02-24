@@ -6,40 +6,33 @@ import io.github.cdimascio.dotenv.Dotenv;
 
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class GeminiAPI {
 
     private static Dotenv dotenv = Dotenv.load();
     private static final String API_KEY = dotenv.get("GEMINI_API_KEY");
 
-
+    //TEMP
+    static HashMap<String,ChatRequest> chats = new HashMap<>();
 
     private static final String API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key="+API_KEY;
 
 
-    public static String sendText(String text) throws URISyntaxException, IOException, InterruptedException {
+    public static String sendText(String text,String userId){
 
        OkHttpClient client = new OkHttpClient();
        Gson gson = new Gson();
 
-        /*Map<String, Object> requestBodyMap = new HashMap<>();
-        List<Map<String, String>> parts = List.of(Map.of("text", "Hello"));
-        requestBodyMap.put("contents", List.of(Map.of("parts", parts)));*/
+       if(!chats.containsKey(userId)){
+           chats.put(userId,new ChatRequest());
+       }
 
-        Chat chat = new Chat("Hello");
-        String jsonRequest = gson.toJson(chat);
+        chats.get(userId).addMessage(text,"user");
 
-        System.out.println(jsonRequest);
+        String chatRequest = gson.toJson(chats.get(userId));
 
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonRequest);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), chatRequest);
 
 
         Request request = new Request.Builder()
@@ -49,10 +42,23 @@ public class GeminiAPI {
 
         try {
             Response response = client.newCall(request).execute();
-            return response.body().string();
+
+            ChatResponse chatResponse = gson.fromJson(response.body().string(), ChatResponse.class);
+
+            String botResponse = chatResponse.candidates.get(0).content.parts.get(0).text;
+
+            chats.get(userId).addMessage(botResponse,"model");
+
+            return botResponse;
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
     };
+
+    public static void printChat() {
+        Gson gson = new Gson();
+        String json = gson.toJson(chats);
+        System.out.println(json);
+    }
 }

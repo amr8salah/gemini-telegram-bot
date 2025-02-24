@@ -4,12 +4,16 @@ import java.util.ArrayList;
 import java.util.Map;
 
 
-public class Chat {
+public class ChatRequest {
     private ArrayList<Message> contents;
 
-    Chat(String text){
+    ChatRequest(){
         contents = new ArrayList<>();
+    }
 
+    void addMessage(String text, String role){
+        Message message = new Message(text, role);
+        contents.add(message);
     }
 
 }
@@ -17,7 +21,7 @@ class Message{
     String role;
     ArrayList<Map<String,String>> parts;
 
-    void setText(String role, String text){
+    Message(String text, String role){
         parts = new ArrayList<>();
         this.role = role;
 
