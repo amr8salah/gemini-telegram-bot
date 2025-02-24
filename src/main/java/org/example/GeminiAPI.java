@@ -14,23 +14,23 @@ public class GeminiAPI {
     private static final String API_KEY = dotenv.get("GEMINI_API_KEY");
 
     //TEMP
-    static HashMap<String,ChatRequest> chats = new HashMap<>();
+    static HashMap<Long,ChatRequest> chats = new HashMap<>();
 
     private static final String API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key="+API_KEY;
 
 
-    public static String sendText(String text,String userId){
+    static String sendText(String text,long chatId){
 
        OkHttpClient client = new OkHttpClient();
        Gson gson = new Gson();
 
-       if(!chats.containsKey(userId)){
-           chats.put(userId,new ChatRequest());
+       if(!chats.containsKey(chatId)){
+           chats.put(chatId,new ChatRequest());
        }
 
-        chats.get(userId).addMessage(text,"user");
+        chats.get(chatId).addMessage(text,"user");
 
-        String chatRequest = gson.toJson(chats.get(userId));
+        String chatRequest = gson.toJson(chats.get(chatId));
 
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), chatRequest);
 
@@ -47,18 +47,12 @@ public class GeminiAPI {
 
             String botResponse = chatResponse.candidates.get(0).content.parts.get(0).text;
 
-            chats.get(userId).addMessage(botResponse,"model");
+            chats.get(chatId).addMessage(botResponse,"model");
 
             return botResponse;
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
-    };
-
-    public static void printChat() {
-        Gson gson = new Gson();
-        String json = gson.toJson(chats);
-        System.out.println(json);
     }
 }
