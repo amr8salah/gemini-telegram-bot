@@ -1,4 +1,4 @@
-package org.example;
+package org.geminibot.gemini;
 
 import com.google.gson.*;
 import com.squareup.okhttp.*;
@@ -19,7 +19,7 @@ public class GeminiAPI {
     private static final String API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key="+API_KEY;
 
 
-    static String sendText(String text,long chatId){
+    public static String sendText(String text,long chatId){
 
        OkHttpClient client = new OkHttpClient();
        Gson gson = new Gson();

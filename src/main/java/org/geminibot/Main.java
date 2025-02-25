@@ -1,5 +1,6 @@
-package org.example;
+package org.geminibot;
 
+import org.geminibot.telegram.GeminiBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;

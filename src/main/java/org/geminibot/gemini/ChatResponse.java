@@ -1,6 +1,5 @@
-package org.example;
+package org.geminibot.gemini;
 
-import com.google.gson.Gson;
 import java.util.List;
 
 class ChatResponse {
