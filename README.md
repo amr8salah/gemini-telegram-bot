@@ -1,3 +1,8 @@
+# Gemini Telegram bot
+A simple Gemini AI bot integrated in Telegram.
+
+
+## How to run:
 1- Open pom.xml as project through IDE
 
 2- Get Gemini API key from: https://aistudio.google.com/app/apikey
