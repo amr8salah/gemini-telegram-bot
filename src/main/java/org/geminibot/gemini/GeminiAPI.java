@@ -1,12 +1,13 @@
 package org.geminibot.gemini;
 
 import com.google.gson.*;
-import com.squareup.okhttp.*;
 import io.github.cdimascio.dotenv.Dotenv;
+import okhttp3.*;
 
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 public class GeminiAPI {
 
@@ -21,7 +22,12 @@ public class GeminiAPI {
 
     public static String sendText(String text,long chatId){
 
-       OkHttpClient client = new OkHttpClient();
+       OkHttpClient client = new OkHttpClient.Builder()
+               .connectTimeout(10, TimeUnit.SECONDS)  // Time to establish a connection
+               .readTimeout(20, TimeUnit.SECONDS)     // Time to wait for response (increased for large responses)
+               .writeTimeout(20, TimeUnit.SECONDS)    // Time to send data
+               .retryOnConnectionFailure(true)        // Auto-retry on failures
+               .build();
        Gson gson = new Gson();
 
        if(!chats.containsKey(chatId)){

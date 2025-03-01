@@ -30,28 +30,30 @@ public class GeminiBot extends TelegramLongPollingBot {
         // Check if the update has a message and is a text message
         if (update.hasMessage() && update.getMessage().hasText()) {
 
-
-
-            String messageText = update.getMessage().getText();
-
-            System.out.println("\nReceived text: " + messageText);
-
             long chatId = update.getMessage().getChatId();
+            String message = update.getMessage().getText();
+            String username = update.getMessage().getFrom().getUserName();
+
+            System.out.println("\nChatId: " + chatId);
+            System.out.println("Username: " + username);
+            System.out.println("Message: " + message);
 
 
-            String botResponse = GeminiAPI.sendText(messageText,chatId);
+            String botResponse = GeminiAPI.sendText(message,chatId);
 
-            System.out.println(botResponse);
+            System.out.println("Gemini: " + botResponse+"\n");
+
+            //To Amr: Divide Response less than 4096 char
+
 
             // Send response
             sendMessage(chatId, botResponse);
-
-            System.out.println("Responded with: " + botResponse+"\n");
         }
     }
 
     private void sendMessage(long chatId, String text) {
 
+        //To Amr: Fix styling
         text = convertMarkdownToHtml(text);
 
         SendMessage message = new SendMessage();
